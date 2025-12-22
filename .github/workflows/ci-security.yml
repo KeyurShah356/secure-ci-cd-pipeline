@@ -38,7 +38,9 @@ jobs:
           --failOnCVSS 7
 
       - name: Upload Security Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: security-report
           path: reports
+
