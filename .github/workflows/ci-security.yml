@@ -23,23 +23,20 @@ jobs:
       - name: Run application test
         run: npm start &
 
-      - name: Install OWASP Dependency Check
-        run: |
-          wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip
-          unzip dependency-check-9.0.9-release.zip
-
-      - name: Run Vulnerability Scan
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: "Secure CI/CD Pipeline"
+          path: "."
+          format: "HTML"
+          out: "reports"
+          args: >
+           --failOnCVSS 7
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: |
-            ./dependency-check/bin/dependency-check.sh \
-            --project "Secure CI/CD Pipeline" \
-            --scan . \
-            --format HTML \
-            --out reports \
-            --failOnCVSS 7
 
 
+          
       - name: Upload Security Report
         if: always()
         uses: actions/upload-artifact@v4
